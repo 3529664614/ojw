@@ -5,5 +5,5 @@ import com.ojw.backend.pojo.Special;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface SpecialityMapper extends BaseMapper<Special> {
+public interface SpecialMapper extends BaseMapper<Special> {
 }

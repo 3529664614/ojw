@@ -28,8 +28,9 @@ public class GetCollegeListServiceImpl implements GetCollegeListService {
         queryWrapper.like("type", college_name);
         List<College> colleges = collegeMapper.selectPage(collegeIPage, queryWrapper).getRecords();
         JSONObject resp = new JSONObject();
+        resp.put("error_message", "success");
         resp.put("colleges", colleges);
-        resp.put("colleges_count", collegeMapper.selectCount(queryWrapper));
+        resp.put("total_colleges", collegeMapper.selectCount(queryWrapper));
         return resp;
     }
 }

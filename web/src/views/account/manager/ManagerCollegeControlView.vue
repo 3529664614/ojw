@@ -22,7 +22,7 @@
     </div>
 
     <div class="manager-first">
-      <input  class="form-control form-control-sm manager-first-first" type="text" placeholder="请输入学院" aria-label=".form-control-sm example">
+      <input v-model="college_name" class="form-control form-control-sm manager-first-first" type="text" placeholder="请输入学院" aria-label=".form-control-sm example">
       <button @click="college_search" type="button" class="btn btn-light manager-first-second">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -58,13 +58,14 @@
             </div>
             <div class="modal-body">
               <div class="mb-3">
-                <label for="add_user_name" class="form-label">学院</label>
-                <input type="text" class="form-control" id="add_user_name" placeholder="请输入学院">
+                <label for="add_college_name" class="form-label">学院</label>
+                <input v-model="add_college_name" type="text" class="form-control" id="add_college_name" placeholder="请输入学院">
               </div>
             </div>
             <div class="modal-footer">
+              <div class="error-message">{{ add_college_error_message }}</div>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-              <button type="button" class="btn btn-primary">确认</button>
+              <button @click="add_college_type" type="button" class="btn btn-primary">确认</button>
             </div>
           </div>
         </div>
@@ -85,7 +86,7 @@
             <span> {{college.type}} </span>
           </td>
           <td>
-            <button type="button" class="btn btn-secondary manager-second-first" data-bs-toggle="modal" :data-bs-target="'#college_info_modal' + college.id" style="margin-right: 20px">
+            <button @click="click_special_info(college.type)" type="button" class="btn btn-secondary manager-second-first" data-bs-toggle="modal" :data-bs-target="'#college_info_modal' + college.id" style="margin-right: 20px">
               查看所有专业
             </button>
             <div class="modal fade" :id="'college_info_modal' + college.id" tabindex="-1" aria-hidden="true">
@@ -106,7 +107,7 @@
                       <tbody>
                         <tr v-for="special in specials" :key="special.id">
                           <td>
-                            <span>special.special</span>
+                            <span>{{special.special}}</span>
                           </td>
                           <td>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
@@ -118,10 +119,9 @@
                           <li class="page-item" @click="special_click_page(-2, college.type)">
                             <a class="page-link" href="#">前一页</a>
                           </li>
-                          <li :class="'page-item ' + page.is_active" v-for="page in pages" :key="page.number" @click="special_click_page(page.number, college.type)">
+                          <li :class="'page-item ' + page.is_active" v-for="page in special_pages" :key="page.number" @click="special_click_page(page.number, college.type)">
                             <a class="page-link" href="#">{{page.number}}</a>
                           </li>
-
                           <li class="page-item" @click="special_click_page(-1, college.type)">
                             <a class="page-link" href="#">后一页</a>
                           </li>
@@ -187,6 +187,8 @@ import ContentField from '@/components/ContentField.vue';
 import {ref} from "vue";
 import {useStore} from "vuex";
 import $ from "jquery";
+import {Modal} from "bootstrap/dist/js/bootstrap";
+
 export default {
   name: "ManagerCollegeControlView",
   components: {
@@ -204,6 +206,44 @@ export default {
     let college_name = ref('');
     let specials = ref([]);
     let one = 1;
+    let add_college_name = ref('');
+    let add_college_error_message = ref('');
+
+    const college_search = () => {
+      pull_page(one, college_name);
+    }
+
+    const college_reset_list = () => {
+      college_name.value = "";
+      pull_page(one, college_name);
+    }
+
+    const add_college_type = () => {
+      add_college_error_message.value = "";
+      $.ajax({
+        url: "http://localhost:3000/api/user/college/add/",
+        type: "post",
+        data: {
+          college_name: add_college_name.value,
+        },
+        headers: {
+          Authorization: "Bearer " + store.state.user.token,
+        },
+        success(resp) {
+          if (resp.error_message === 'success') {
+            Modal.getInstance("#add_college_modal").hide();
+            const myModal = new Modal('#edit_modal');
+            myModal.show();
+            pull_page(one, "");
+          } else {
+            add_college_error_message.value = "学院名不能为空";
+          }
+        },
+        error() {
+          add_college_error_message.value = "学院名不能为空";
+        }
+      })
+    }
 
     const user_click_page = page => {
       if (page === -2) page = current_page - 1;
@@ -213,9 +253,14 @@ export default {
         pull_page(page, college_name);
       }
     }
+
+    const click_special_info = type => {
+      special_pull_page(special_current_page, type);
+    }
     const special_click_page = (page, college_name) => {
-      if (page === -2) page = current_page - 1;
-      else if (page === -1) page = current_page + 1;
+      console.log(page, college_name);
+      if (page === -2) page = special_current_page - 1;
+      else if (page === -1) page = special_current_page + 1;
       let max_page = parseInt(Math.ceil(total_specials / 10));
       if (page >= 1 && page <= max_page) {
         special_pull_page(page, college_name);
@@ -242,7 +287,7 @@ export default {
         if (i >= 1 && i <= max_pages) {
           new_pages.push({
             number: i,
-            is_active: i === current_page ? "active" : "",
+            is_active: i === special_current_page ? "active" : "",
           });
         }
       }
@@ -284,9 +329,12 @@ export default {
           Authorization: "Bearer " + store.state.user.token,
         },
         success(resp) {
-          specials.value = resp.specials;
-          total_specials = resp.total_specials;
-          special_update_pages();
+          if (resp.error_message === 'success') {
+            console.log(resp);
+            specials.value = resp.specials;
+            total_specials = resp.total_specials;
+            special_update_pages();
+          }
         },
         error(resp) {
           console.log(resp);
@@ -311,6 +359,12 @@ export default {
       special_update_pages,
       special_pages,
       total_specials,
+      click_special_info,
+      add_college_name,
+      add_college_type,
+      add_college_error_message,
+      college_search,
+      college_reset_list,
     }
   }
 }
@@ -343,7 +397,7 @@ export default {
   margin-right: 10px;
 }
 
-.error_message {
+.error-message {
   color: red;
 }
 
