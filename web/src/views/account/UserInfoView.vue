@@ -1,5 +1,5 @@
 <template>
-我的个人信息
+我的个人中心
 </template>
 
 <script>

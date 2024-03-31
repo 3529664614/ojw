@@ -31,6 +31,7 @@ public class UpdateStudentServiceImpl implements UpdateStudentService {
         String age = data.get("student_age");
         String sex = data.get("student_sex");
         String college = data.get("student_college");
+        String special = data.get("student_special");
         String classroom = data.get("student_classroom");
         String createtime1 = data.get("student_createtime");
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -53,6 +54,7 @@ public class UpdateStudentServiceImpl implements UpdateStudentService {
                 violate_discipline,
                 awarded,
                 college,
+                special,
                 classroom
         );
 

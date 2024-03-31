@@ -27,7 +27,6 @@ public class GetStudentListServiceImpl implements GetStudentListService {
         queryWrapper.orderByDesc("id");
         queryWrapper.like("name", student_name);
         queryWrapper.like("college", student_college);
-        List<Student> aa = studentMapper.selectList(null);
         List<Student> students = studentMapper.selectPage(studentIPage, queryWrapper).getRecords();
         JSONObject resp = new JSONObject();
         resp.put("students", students);

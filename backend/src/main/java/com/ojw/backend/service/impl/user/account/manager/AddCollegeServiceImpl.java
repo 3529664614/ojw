@@ -1,5 +1,6 @@
 package com.ojw.backend.service.impl.user.account.manager;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ojw.backend.mapper.CollegeMapper;
 import com.ojw.backend.pojo.College;
 import com.ojw.backend.service.in.user.account.manager.AddCollegeService;
@@ -23,6 +24,13 @@ public class AddCollegeServiceImpl implements AddCollegeService {
         }
         if (college_name.length() == 0) {
             resp.put("error_message", "学院名不能为空");
+            return resp;
+        }
+        QueryWrapper<College> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type", college_name);
+        College college1 = collegeMapper.selectOne(queryWrapper);
+        if (college1 != null) {
+            resp.put("error_message", "该学院名已经使用过");
             return resp;
         }
         college_name.trim();

@@ -30,5 +30,6 @@ public class Student {
     private String violateDiscipline;
     private String awarded;
     private String college;
+    private String special;
     private String classroom;
 }

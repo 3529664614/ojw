@@ -4,8 +4,8 @@
       <div class="col-3">
         <form @submit.prevent="login">
           <div class="mb-3">
-            <label for="username" class="form-label">用户名</label>
-            <input v-model="username" type="text" class="form-control" id="username" placeholder="请输入用户名">
+            <label for="username" class="form-label">工号或学号</label>
+            <input v-model="username" type="text" class="form-control" id="username" placeholder="请输入工号或学号">
           </div>
           <div class="mb-3">
             <label for="password" class="form-label">密码</label>

@@ -9,6 +9,13 @@ import ManagerServiceView from "@/views/account/manager/ManagerServiceView.vue";
 import UserControlView from "@/views/account/UserControlView.vue";
 import ManagerStudentControlView from "@/views/account/manager/ManagerStudentControlView.vue";
 import ManagerCollegeControlView from "@/views/account/manager/ManagerCollegeControlView.vue";
+import ManagerTeacherControlView from "@/views/account/manager/ManagerTeacherControlView.vue";
+import ManagerCurriculumControlView from "@/views/account/manager/ManagerCurriculumControlView.vue";
+import TeacherLessonView from "@/views/account/teacher/TeacherLessonView.vue";
+import StudentLessonView from "@/views/account/student/StudentLessonView.vue";
+import StudentInfoView from "@/views/account/student/StudentInfoView.vue";
+import ChatControlView from "@/views/account/ChatControlView.vue";
+import NoticeControlView from "@/views/account/NoticeControlView.vue";
 
 const routes = [
   {
@@ -63,6 +70,62 @@ const routes = [
     path: "/user/service/manager/college/control/",
     name: "manager_college_control",
     component: ManagerCollegeControlView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/manager/teacher/control/",
+    name: "manager_teacher_control",
+    component: ManagerTeacherControlView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/manager/curriculum/control/",
+    name: "manager_curriculum_control",
+    component: ManagerCurriculumControlView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/teacher/lesson/control/",
+    name: "teacher_lesson_control",
+    component: TeacherLessonView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/student/lesson/control/",
+    name: "student_lesson_control",
+    component: StudentLessonView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/student/lesson/control/",
+    name: "student_info_control",
+    component: StudentInfoView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/chat/control/",
+    name: "chat_control",
+    component: ChatControlView,
+    meta: {
+      requestAuth: true,
+    }
+  },
+  {
+    path: "/user/service/notice/control/",
+    name: "notice_control",
+    component: NoticeControlView,
     meta: {
       requestAuth: true,
     }

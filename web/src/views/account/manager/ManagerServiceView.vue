@@ -2,8 +2,14 @@
   <ContentField>
     <div class="manager-featured-articles">
       <h2>我的服务</h2>
-
       <div class="manager-tile-container">
+        <div class="manager-article-tile">
+          <a href="#" class="manager-tile-tag">
+            <button type="button" class="btn btn-primary" style="width: 100%; height: 100%">
+              <router-link :to="{name: 'notice_control'}" style="color: white; font-size: 24px">通知公告</router-link>
+            </button>
+          </a>
+        </div>
         <div class="manager-article-tile">
           <a href="#" class="manager-tile-tag">
             <button type="button" class="btn btn-primary" style="width: 100%; height: 100%">
@@ -30,26 +36,24 @@
         <div class="manager-article-tile">
           <a href="#" class="manager-tile-tag">
             <button type="button" class="btn btn-primary" style="width: 100%; height: 100%">
-              <a style="color: white; font-size: 24px">教师管理</a>
+              <router-link :to="{name: 'manager_teacher_control'}" style="color: white; font-size: 24px">教师管理</router-link>
             </button>
           </a>
         </div>
         <div class="manager-article-tile">
           <a href="#" class="manager-tile-tag">
             <button type="button" class="btn btn-primary" style="width: 100%; height: 100%">
-              <a style="color: white; font-size: 24px">课程管理</a>
+              <router-link :to="{name: 'manager_curriculum_control'}" style="color: white; font-size: 24px">课程管理</router-link>
             </button>
           </a>
         </div>
         <div class="manager-article-tile">
           <a href="#" class="manager-tile-tag">
             <button type="button" class="btn btn-primary" style="width: 100%; height: 100%">
-              <a style="color: white; font-size: 24px">课程管理</a>
+              <router-link :to="{name: 'chat_control'}" style="color: white; font-size: 24px">客服聊天</router-link>
             </button>
           </a>
         </div>
-
-
       </div>
     </div>
   </ContentField>

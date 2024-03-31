@@ -12,6 +12,7 @@ class BackendApplicationTests {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         System.out.println(passwordEncoder.encode("ojw"));
         System.out.println(passwordEncoder.encode("oxb"));
+
     }
 
 }

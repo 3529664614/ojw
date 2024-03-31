@@ -87,6 +87,9 @@
                               学院: {{student.college}}
                             </div>
                             <div class="row">
+                              专业: {{student.special}}
+                            </div>
+                            <div class="row">
                               班级: {{student.classroom}}
                             </div>
                             <div class="row">
@@ -146,6 +149,10 @@
                       <div class="mb-3">
                         <label for="update_student_college" class="form-label">学院</label>
                         <input v-model="student.college" type="text" class="form-control" id="update_student_college" placeholder="请输入学院">
+                      </div>
+                      <div class="mb-3">
+                        <label for="update_student_special" class="form-label">专业</label>
+                        <input v-model="student.special" type="text" class="form-control" id="update_student_special" placeholder="请输入专业">
                       </div>
                       <div class="mb-3">
                         <label for="update_student_classroom" class="form-label">班级</label>
@@ -290,6 +297,7 @@ export default {
           student_age: student.age,
           student_sex: student.sex,
           student_college: student.college,
+          student_special: student.special,
           student_classroom: student.classroom,
           student_createtime: student.createtime,
           student_endtime: student.endtime,

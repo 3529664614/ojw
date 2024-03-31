@@ -23,7 +23,7 @@ public class LoginServiceimpl implements LoginService {
         data.put("username", user.getUsername());
         data.put("name", user.getName());
         data.put("sex", user.getSex());
-        data.put("user_type", user.getUserType());
+        data.put("userType", user.getUserType());
         data.put("age", user.getAge());
         return data;
     }

@@ -2,11 +2,14 @@ package com.ojw.backend.service.impl.user.account;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ojw.backend.mapper.StudentMapper;
+import com.ojw.backend.mapper.TeacherMapper;
 import com.ojw.backend.mapper.UserMapper;
 import com.ojw.backend.pojo.Student;
+import com.ojw.backend.pojo.Teacher;
 import com.ojw.backend.pojo.User;
 import com.ojw.backend.service.impl.utils.UserDetailsImpl;
 import com.ojw.backend.service.in.user.account.AddUserService;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +30,9 @@ public class AddUserServiceImpl implements AddUserService {
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private TeacherMapper teacherMapper;
     @Override
     public Map<String, String> adduser(Map<String, String> data) {
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
@@ -106,11 +112,27 @@ public class AddUserServiceImpl implements AddUserService {
                     "11",
                     "无",
                     "未填",
+                    "未填",
                     "未填"
             );
             studentMapper.insert(student);
 
         }
+        if (user_type.equals("老师")) {
+            Date now = new Date();
+            Teacher teacher = new Teacher(
+                    null,
+                    user.getName(),
+                    user.getUsername(),
+                    user_sex,
+                    user_age,
+                    "未填",
+                    now,
+                    "未填"
+            );
+            teacherMapper.insert(teacher);
+        }
+
         new_data.put("error_message", "success");
         return new_data;
     }

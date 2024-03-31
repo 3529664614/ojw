@@ -101,16 +101,12 @@
                       <thead>
                         <tr>
                           <th>专业</th>
-                          <th>操作</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="special in specials" :key="special.id">
                           <td>
                             <span>{{special.special}}</span>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
                           </td>
                         </tr>
                       </tbody>
@@ -135,30 +131,32 @@
                 </div>
               </div>
             </div>
-<!--            <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#add_college_special_modal_' + college.id" style="margin-right: 20px">-->
-<!--              新增专业-->
-<!--            </button>-->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="'#add_college_special_modal_' + college.id" style="margin-right: 20px">
+              新增专业
+            </button>
 
-<!--            <div class="modal fade" :id="'add_college_special_modal_' + college.id" tabindex="-1" aria-hidden="true">-->
-<!--              <div class="modal-dialog">-->
-<!--                <div class="modal-content">-->
-<!--                  <div class="modal-header">-->
-<!--                    <h1 class="modal-title fs-5">新增专业</h1>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                  </div>-->
-<!--                  <div class="modal-body">-->
-<!--                    <div class="mb-3">-->
-<!--                      <label for="update_user_phone" class="form-label">专业</label>-->
-<!--                      <input v-model="Add_college_special.name" type="text" class="form-control" id="update_user_phone" placeholder="请输入专业">-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>-->
-<!--                    <button @click="add_college_special" type="button" class="btn btn-primary">确认</button>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
+            <div class="modal fade" :id="'add_college_special_modal_' + college.id" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5">新增专业</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="add_college_special_name" class="form-label">专业</label>
+                      <input v-model="Add_college_special_name" type="text" class="form-control" id="add_college_special_name" placeholder="请输入专业">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <div class="error-message">{{ add_college_special_message }}</div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button @click="add_college_special(college.type, college.id)" type="button" class="btn btn-primary">确认</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button @click="remove_college_type(college.type)" type="button" class="btn btn-danger">删除</button>
           </td>
         </tr>
 
@@ -208,6 +206,53 @@ export default {
     let one = 1;
     let add_college_name = ref('');
     let add_college_error_message = ref('');
+    let Add_college_special_name = ref('');
+    let add_college_special_message = ref('');
+
+    const remove_college_type = (college_type) => {
+      $.ajax({
+        url: "http://localhost:3000/api/user/college/remove/",
+        type: "post",
+        data: {
+          college_type: college_type,
+        },
+        headers: {
+          Authorization: "Bearer " + store.state.user.token,
+        },
+        success(resp) {
+          if (resp.error_message === 'success') {
+            console.log(resp);
+            pull_page(one, "");
+          }
+        },
+      })
+    }
+    const add_college_special = (college_type, id) => {
+      add_college_special_message.value = "";
+      $.ajax({
+        url: "http://localhost:3000/api/user/college/special/add/",
+        type: "post",
+        data: {
+          college_type: college_type,
+          special: Add_college_special_name.value,
+        },
+        headers: {
+          Authorization: "Bearer " + store.state.user.token,
+        },
+        success(resp) {
+          if (resp.error_message === 'success') {
+            Modal.getInstance('#add_college_special_modal_' + id).hide();
+            const myModal = new Modal('#edit_modal');
+            myModal.show();
+          } else {
+            add_college_error_message.value = resp.error_message;
+          }
+        },
+        error() {
+          add_college_error_message.value = "专业名不能为空";
+        }
+      })
+    }
 
     const college_search = () => {
       pull_page(one, college_name);
@@ -231,6 +276,7 @@ export default {
         },
         success(resp) {
           if (resp.error_message === 'success') {
+            add_college_name.value = "";
             Modal.getInstance("#add_college_modal").hide();
             const myModal = new Modal('#edit_modal');
             myModal.show();
@@ -365,6 +411,10 @@ export default {
       add_college_error_message,
       college_search,
       college_reset_list,
+      add_college_special_message,
+      add_college_special,
+      Add_college_special_name,
+      remove_college_type,
     }
   }
 }
